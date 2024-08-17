@@ -4,6 +4,10 @@
 
 cmake_minimum_required(VERSION 3.15)
 
+# Packages
+# include(cmake/generic/vcpkg.cmake)
+
+# Project
 project(template)
 include(cmake/generic/project.cmake)
 include(cmake/generic/publish.cmake)

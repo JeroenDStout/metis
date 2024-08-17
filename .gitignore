@@ -3,4 +3,5 @@ build/
 zip/
 __pycache__/
 _junc_tree/
+vcpkg_installed/
 touch
