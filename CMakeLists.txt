@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.15)
 # include(cmake/generic/vcpkg.cmake)
 
 # Project
-project(template)
+project(metis)
 include(cmake/generic/project.cmake)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
