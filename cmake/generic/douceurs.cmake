@@ -13,7 +13,9 @@ FetchContent_MakeAvailable(douceurs)
     
 # Config
 function(configure_project_douceurs project_ref)
-  message(STATUS "Configure doucuers ${project_ref}")
+  message(STATUS "Configure douceurs ${project_ref}")
   
   include_directories(${douceurs_SOURCE_DIR}/include)
+  
+  set_target_properties(douceurs_repo_version PROPERTIES FOLDER "dependencies/douceurs")
 endfunction()
