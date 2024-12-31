@@ -29,6 +29,7 @@ include(cmake/generic/douceurs.cmake)
 # ...
 
 # Subprojects
+add_subdirectory(src/metis_core)
 add_subdirectory(src/repo_version)
 
 # Publication
