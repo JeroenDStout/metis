@@ -23,13 +23,13 @@ include(cmake/generic/artefacts.cmake)
 include(cmake/generic/sources.cmake)
 include(cmake/generic/assets.cmake)
 include(cmake/generic/publish.cmake)
+include(cmake/generic/eigen.cmake)
+include(cmake/generic/nanobind.cmake)
 include(cmake/generic/douceurs.cmake)
-
-# Processing
-# ...
 
 # Subprojects
 add_subdirectory(src/metis_core)
+add_subdirectory(src/metis_py)
 add_subdirectory(src/repo_version)
 
 # Publication
