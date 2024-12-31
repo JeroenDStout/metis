@@ -25,11 +25,13 @@ include(cmake/generic/assets.cmake)
 include(cmake/generic/publish.cmake)
 include(cmake/generic/eigen.cmake)
 include(cmake/generic/nanobind.cmake)
+include(cmake/generic/qt.cmake)
 include(cmake/generic/douceurs.cmake)
 
 # Subprojects
 add_subdirectory(src/metis_core)
 add_subdirectory(src/metis_py)
+add_subdirectory(src/metis_qt)
 add_subdirectory(src/repo_version)
 
 # Publication
