@@ -6,7 +6,7 @@ void nb_repo_version(nanobind::module_ &m)
 {
     m.def("get_version", [](){
       nanobind::dict dict;
-      dict["metis"]    = gaos::version::get_git_essential_version();
+      dict["metis"]    = metis::version::get_git_essential_version();
       dict["douceurs"] = douceurs::version::get_git_essential_version();
       return dict;
     });
