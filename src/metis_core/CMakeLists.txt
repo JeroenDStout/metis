@@ -8,9 +8,15 @@ setup_project_source(metis_core "core"
   src:
     metis.cpp
 )
+setup_project_source(metis_core "core/const"
+  include:
+    data_types.h
+    data_constants.h
+)
 setup_project_source(metis_core "core/data"
   include:
-    data_questions.h
+    data_queries.h
+    data_set.h
 )
 #setup_project_source(metis_core "core/policy"
 #)
