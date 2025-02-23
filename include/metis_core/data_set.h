@@ -15,6 +15,10 @@ namespace metis::core {
 
         raw_allocator_t                 raw_allocator;
         std::vector<data_query_payload> query_payloads;
+
+        data_set_buffers()
+        : raw_allocator(std::make_unique<raw_allocator_t::element_type>())
+        { ; }
     };
 
     struct data_set {

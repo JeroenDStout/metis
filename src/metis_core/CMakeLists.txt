@@ -20,8 +20,12 @@ setup_project_source(metis_core "core/data"
 )
 #setup_project_source(metis_core "core/policy"
 #)
-#setup_project_source(metis_core "core/proc"
-#)
+setup_project_source(metis_core "core/proc"
+  src:
+    proc_set.cpp
+  include:
+    proc_set.h
+)
 
 setup_project_source(metis_core "assets"
   src:

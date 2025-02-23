@@ -13,7 +13,7 @@
 namespace metis::core {
 
     struct data_query_payload {
-        std::string_view   query, answer;
+        std::string_view   question, answer;
     };
 
     struct data_query_sort {

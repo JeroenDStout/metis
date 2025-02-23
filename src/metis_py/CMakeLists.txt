@@ -9,8 +9,17 @@ setup_project_source(metis_py "nanobind"
     nanobind.cpp
     nanobind_meta.cpp
 )
-#setup_project_source(metis_py "core"
-#)
+setup_project_source(metis_py "module"
+  src:
+    metis_module.cpp
+)
+setup_project_source(metis_py "bindings"
+  src:
+    metis_set.cpp
+    metis_query_view.cpp
+  include:
+    metis_query_view.h
+)
 setup_project_source(metis_py "third_party"
   include:
     inc_nanobind.h
