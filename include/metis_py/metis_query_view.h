@@ -12,7 +12,7 @@ namespace metis::py {
     struct query_view {
         
         metis::core::data_set    *owner;
-        metis::core::query_idx_t query_idx;
+        metis::core::query_idx_t idx;
 
     };
 

@@ -28,7 +28,7 @@ void nb_metis_sets(nanobind::module_ &m)
     nb::class_<mc::data_set>(m, "set")
       .def(nb::init<>())
       .def_prop_ro("query_count",
-        [](const mc::data_set& ref) { return ref.buffers.query_payloads.size(); }
+        [](const mc::data_set& ref) { return ref.buffers.canonical.query_payloads.size(); }
       )
       .def("get_query_view", /* TODO: Boundary check? */
         [](mc::data_set &ref, mc::query_idx_t idx) { return d::get_query_view(ref, idx); }

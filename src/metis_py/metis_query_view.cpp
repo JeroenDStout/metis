@@ -9,11 +9,11 @@ namespace nb = nanobind;
 namespace metis_query_view_detail {
 
     auto& payload(metis::py::query_view &view) {
-        return view.owner->buffers.query_payloads[view.query_idx];
+        return view.owner->buffers.canonical.query_payloads[view.query_idx];
     }
     
     auto& payload(metis::py::query_view const &view) {
-        return view.owner->buffers.query_payloads[view.query_idx];
+        return view.owner->buffers.canonical.query_payloads[view.query_idx];
     }
 
     auto alloc_string(metis::py::query_view &view, std::string_view const &string) {
