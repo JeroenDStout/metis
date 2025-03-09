@@ -17,8 +17,10 @@ setup_project_source(metis_py "bindings"
   src:
     metis_set.cpp
     metis_query_view.cpp
+    metis_family_view.cpp
   include:
     metis_query_view.h
+    metis_family_view.h
 )
 setup_project_source(metis_py "third_party"
   include:
@@ -31,6 +33,7 @@ configure_project_nanobind(metis_py)
 configure_cxx_target(metis_py)
 configure_target_outputs(metis_py)
 configure_project_eigen(metis_py)
+configure_project_douceurs(metis_py)
 	
 add_dependencies(metis_py metis_core repo_version)
 target_link_libraries(metis_py PRIVATE metis_core)

@@ -10,12 +10,15 @@ print(metis.get_version())
 reps = 0
 # -
 my_set = metis.set()
-print(my_set.query_count)
 
+
+# +
+subject = my_set.add_subject()
 
 view = my_set.add_query()
 view.question = "my question"
 view.answer   = "my answer"
-print(view.question + " -> " + view.answer)
+print(view.get_dbg_string())
+# -
 
-print(my_set.query_count)
+print(my_set.get_stats_string())
