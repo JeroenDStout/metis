@@ -15,6 +15,7 @@ setup_project_source(metis_py "module"
 )
 setup_project_source(metis_py "bindings"
   src:
+    metis_io.cpp
     metis_set.cpp
     metis_query_view.cpp
     metis_family_view.cpp

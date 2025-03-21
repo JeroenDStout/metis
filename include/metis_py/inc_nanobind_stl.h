@@ -8,6 +8,7 @@
 #include <nanobind/stl/string.h>
 #include <nanobind/stl/string_view.h>
 #include <nanobind/stl/unique_ptr.h>
+#include <nanobind/stl/tuple.h>
 
 #if defined(_MSC_VER)
 #  pragma warning(pop)

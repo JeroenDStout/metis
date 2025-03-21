@@ -7,10 +7,12 @@ namespace nb = nanobind;
 void nb_metis_sets(nanobind::module_ &m);
 void nb_metis_query_view(nanobind::module_ &m);
 void nb_metis_subject_view(nanobind::module_ &m);
+void nb_metis_io(nanobind::module_ &m);
 
 void nb_metis_module(nanobind::module_ &m)
 {
     nb_metis_sets(m);
     nb_metis_query_view(m);
     nb_metis_subject_view(m);
+    nb_metis_io(m);
 }
