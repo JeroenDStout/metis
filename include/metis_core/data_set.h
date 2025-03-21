@@ -18,7 +18,7 @@ namespace metis::core {
         template<typename T>
         using array_t         = std::vector<T>;
         template<typename T>
-        using smap_t           = std::unordered_map<std::string_view, T>;
+        using smap_t          = std::unordered_map<std::string_view, T>;
 
         raw_allocator_t raw_allocator;
 

@@ -9,9 +9,9 @@ template<typename style_t>
 void metis::core::data_discipline_names::debug_string(std::stringstream& ss) const
 {
     ds::render_dbg_vars<style_t>(ss,
-      "id",         ds::fallback(this->id,                  "[nameless]"),
-      "display",    ds::fallback(this->display, this->id,   "[nameless]"),
-      "sort",       ds::fallback(this->sort,    this->sort, "[nameless]")
+      "id",         this->id,
+      "display",    this->display,
+      "sort",       this->sort
     );
 }
 
@@ -19,9 +19,9 @@ template<typename style_t>
 void metis::core::data_family_names::debug_string(std::stringstream& ss) const
 {
     ds::render_dbg_vars<style_t>(ss,
-      "id",         ds::fallback(this->id,                  "[nameless]"),
-      "display",    ds::fallback(this->display, this->id,   "[nameless]"),
-      "sort",       ds::fallback(this->sort,    this->sort, "[nameless]")
+      "id",         this->id,
+      "display",    this->display,
+      "sort",       this->sort
     );
 }
 
@@ -29,7 +29,7 @@ template<typename style_t>
 void metis::core::data_family_relation::debug_string(std::stringstream& ss) const
 {
     ds::render_dbg_vars<style_t>(ss,
-      "discipline", ds::fallback(this->discipline,          "[none]")
+      "discipline", this->discipline
     );
 }
 
@@ -37,9 +37,9 @@ template<typename style_t>
 void metis::core::data_subject_names::debug_string(std::stringstream& ss) const
 {
     ds::render_dbg_vars<style_t>(ss,
-      "id",         ds::fallback(this->id,                  "[nameless]"),
-      "display",    ds::fallback(this->display, this->id,   "[nameless]"),
-      "sort",       ds::fallback(this->sort,    this->sort, "[nameless]")
+      "id",         this->id,
+      "display",    this->display,
+      "sort",       this->sort
     );
 }
 
@@ -47,6 +47,6 @@ template<typename style_t>
 void metis::core::data_subject_relation::debug_string(std::stringstream& ss) const
 {
     ds::render_dbg_vars<style_t>(ss,
-      "family",     ds::fallback(this->family,              "[none]")
+      "family",     this->family
     );
 }
