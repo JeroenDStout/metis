@@ -36,6 +36,21 @@ void nb_metis_sets(nanobind::module_ &m)
       .def("get_stats_string",
         [](const mc::data_set& ref) { proc_set_dbg_string p; std::stringstream ss; p.debug_string_stats(ss, ref); return ss.str(); }
       )
+      .def_prop_ro("discipline_count",
+        [](const mc::data_set& ref) { return ref.buffers.canonical.discipline_names.size(); }
+      )
+      .def("get_discipline_view",
+        [](mc::data_set &ref, mc::discipline_idx_t idx) { return d::get_view<mp::discipline_view>(ref, idx); }
+      )
+      .def("add_discipline",
+        [](mc::data_set &ref) { mc::proc_set p; return d::get_view<mp::discipline_view>(ref, p.add_discipline(ref)); }
+      )
+      .def("get_family_view",
+        [](mc::data_set &ref, mc::query_idx_t idx) { return d::get_view<mp::family_view>(ref, idx); }
+      )
+      .def("add_family",
+        [](mc::data_set &ref) { mc::proc_set p; return d::get_view<mp::family_view>(ref, p.add_family(ref)); }
+      )
       .def_prop_ro("subject_count",
         [](const mc::data_set& ref) { return ref.buffers.canonical.subject_names.size(); }
       )
