@@ -26,6 +26,6 @@ print(view.get_dbg_string())
 print(my_set.get_stats_string())
 
 data, stats = metis.load_legacy(file_load_path)
-print("Total load time: " + str(stats.total_time_ms))
+print(stats.get_dbg_string())
 
 
