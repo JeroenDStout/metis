@@ -8,6 +8,8 @@
 #include "douceurs/slurp.h"
 #include "douceurs/template_buffer_alloc.h"
 
+#include "metis_core/inc_tinyxml.h"
+
 using namespace metis::core;
 
 void proc_io_legacy::load_from_path(load_stats *out_stats, std::string_view path) const
@@ -28,6 +30,7 @@ void proc_io_legacy::load_from_path(load_stats *out_stats, std::string_view path
     // Function constants
     bool const write_stats = out_stats != nullptr;
     bool const gen_stats   = write_stats || verbose_logging;
+    std::string const path_str(path);
     std::string buffer;
     
     auto t_start = d::value::con_invoke(gen_stats, get_time_now);
@@ -43,15 +46,31 @@ void proc_io_legacy::load_from_path(load_stats *out_stats, std::string_view path
     auto t_slurp_done = d::value::con_invoke(gen_stats, get_time_now);
     if (gen_stats) {
         auto ms = duration_in_ms(t_start, t_slurp_done);
-        if (verbose_logging) std::cout << "Read " << path << " in " << ms << "ms" << std::endl;
+        if (verbose_logging) std::cout << "Finished reading in " << ms << "ms" << std::endl;
         if (write_stats)     out_stats->read_time_ms = ms;
     }
 
-    // -- Do more things
+    // -- Parse as XML
+    
+    tinyxml2::XMLDocument document;
+    bool success = (tinyxml2::XML_SUCCESS == document.Parse(buffer.data(), buffer.size()));
+    if (!success) {
+        std::cout << "Could not parse " << path;
+        return;
+    }
+    
+    auto t_parse_done = d::value::con_invoke(gen_stats, get_time_now);
+    if (gen_stats) {
+        auto ms = duration_in_ms(t_slurp_done, t_parse_done);
+        if (verbose_logging) std::cout << "Finished parsing xml in " << ms << "ms" << std::endl;
+        if (write_stats)     out_stats->parse_time_ms = ms;
+    }
+
+    // -- Finish up
 
     if (gen_stats) {
-        auto ms = duration_in_ms(t_start, t_slurp_done);
-        if (verbose_logging) std::cout << "Finished loadin in " << ms << "ms" << std::endl;
+        auto ms = duration_in_ms(t_start, t_parse_done);
+        if (verbose_logging) std::cout << "Finished loading in " << ms << "ms" << std::endl;
         if (write_stats)     out_stats->total_time_ms = ms;
     }
     

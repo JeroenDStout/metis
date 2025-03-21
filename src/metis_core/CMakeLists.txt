@@ -31,6 +31,11 @@ setup_project_source(metis_core "core/proc"
     proc_set.h
     proc_set_impl.h
     proc_io_legacy.h
+    proc_io_legacy_impl.h
+)
+setup_project_source(metis_py "third_party"
+  include:
+    inc_tinyxml.h
 )
 
 setup_project_source(metis_core "assets"
@@ -46,6 +51,7 @@ configure_cxx_target(metis_core)
 configure_target_outputs(metis_core)
 configure_publish_exec(metis_core)
 configure_project_douceurs(metis_core)
+configure_project_tinyxml(metis_core)
 #configure_asset_folder(metis_core metis_core_assets ...)
     
 add_dependencies(metis_core repo_version)

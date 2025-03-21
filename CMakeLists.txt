@@ -27,6 +27,7 @@ include(cmake/generic/eigen.cmake)
 include(cmake/generic/nanobind.cmake)
 include(cmake/generic/qt.cmake)
 include(cmake/generic/douceurs.cmake)
+include(cmake/generic/tinyxml.cmake)
 
 # Subprojects
 add_subdirectory(src/metis_core)
