@@ -26,9 +26,11 @@ setup_project_source(metis_core "core/data"
 setup_project_source(metis_core "core/proc"
   src:
     proc_set.cpp
+    proc_io_legacy.cpp
   include:
     proc_set.h
     proc_set_impl.h
+    proc_io_legacy.h
 )
 
 setup_project_source(metis_core "assets"
