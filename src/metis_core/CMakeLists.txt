@@ -14,6 +14,8 @@ setup_project_source(metis_core "core/const"
     data_constants.h
 )
 setup_project_source(metis_core "core/data"
+  src:
+    data_set.cpp
   include:
     data_queries.h
     data_queries_impl.h

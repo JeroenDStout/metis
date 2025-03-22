@@ -3,7 +3,8 @@
 /*
  *  ...
  */
-
+ 
+ #include <span>
  #include <string_view>
  #include <sstream>
  #include "metis_core/data_types.h"
@@ -15,8 +16,12 @@ namespace metis::core {
     struct proc_set {
         
         bool verbose_logging = true;
+
+        using string_view      = std::string_view;
+        using string_view_span = std::span<std::string_view>;
         
-        std::string_view alloc(data_set&, std::string_view const&) const;
+        string_view      alloc(data_set&, string_view const&)      const;
+        string_view_span alloc(data_set&, string_view_span const&) const;
 
         discipline_idx_t add_discipline(data_set&) const;
         family_idx_t     add_family(data_set&) const;

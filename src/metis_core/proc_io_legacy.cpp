@@ -1,16 +1,18 @@
 #include "metis_core/proc_io_legacy.h"
 
-#include <chrono>
-#include <iostream>
+#include "metis_core/proc_set.h"
+#include "metis_core/inc_tinyxml.h"
 
 #include "douceurs/def_value.h"
 #include "douceurs/ref_value.h"
 #include "douceurs/slurp.h"
 #include "douceurs/template_buffer_alloc.h"
 #include "douceurs/render_string.h"
+#include "douceurs/string_view_manip.h"
 
-#include "metis_core/proc_set.h"
-#include "metis_core/inc_tinyxml.h"
+#include <array>
+#include <chrono>
+#include <iostream>
 
 using namespace metis::core;
 
@@ -30,6 +32,7 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
     };
 
     // Function constants
+    metis::core::proc_set proc_set{ .verbose_logging = false };
     bool const write_stats = out_stats != nullptr;
     bool const gen_stats   = write_stats || verbose_logging;
     std::string const path_str(path);
@@ -54,7 +57,7 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
 
     // -- Parse as XML
     
-    tinyxml2::XMLDocument document;
+    auto& document = *(out_set.loaded_xml = std::make_unique<tinyxml2::XMLDocument>());
     bool success = (tinyxml2::XML_SUCCESS == document.Parse(buffer.data(), buffer.size()));
     if (!success) {
         std::cout << "Could not parse " << path;
@@ -86,24 +89,23 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
 
         auto *xml_root        = document.RootElement();
         auto *xml_set         = find_child(xml_root, "set");
-        auto *xml_groups      = find_child(xml_set, "groups");
-        auto *xml_megagroups  = find_child(xml_set, "megaGroups");
         auto *xml_omegagroups = find_child(xml_set, "omegaGroups");
+        auto *xml_megagroups  = find_child(xml_set, "megaGroups");
+        auto *xml_groups      = find_child(xml_set, "groups");
+        auto *xml_terms       = find_child(xml_set, "terms");
         
         // Omegagroups -> Disciplines
         for (auto* xml_group = xml_omegagroups->FirstChild(); xml_group; xml_group = xml_group->NextSibling()) {
             char const* c_name         = xml_group->ToElement()->Attribute("name");
             char const* c_display_name = xml_group->ToElement()->Attribute("displayName");
             char const* c_sort_name    = xml_group->ToElement()->Attribute("sortName");
-
-            auto name      = con_str_alloc(c_name,         "[nameless]");
-            auto display   = con_str_alloc(c_display_name, name);
-            auto sort      = con_str_alloc(c_sort_name,    name);
+            
+            auto name =  d::strings::fallback(c_name, "[nameless]");
 
             auto idx = proc_set.add_discipline(out_set);
-            out_set.buffers.canonical.discipline_names[idx].id         = name;
-            out_set.buffers.canonical.discipline_names[idx].display    = display;
-            out_set.buffers.canonical.discipline_names[idx].sort       = sort;
+            out_set.buffers.canonical.discipline_names[idx].id      = name;
+            out_set.buffers.canonical.discipline_names[idx].display = d::strings::fallback(c_display_name, name);
+            out_set.buffers.canonical.discipline_names[idx].sort    = d::strings::fallback(c_sort_name,    name);
         }
 
         // Megagroups -> Families
@@ -113,16 +115,13 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
             char const* c_sort_name    = xml_group->ToElement()->Attribute("sortName");
             char const* c_omega_group  = xml_group->ToElement()->Attribute("omegaGroup");
             
-            auto name       = con_str_alloc(c_name,         "[nameless]");
-            auto display    = con_str_alloc(c_display_name, name);
-            auto sort       = con_str_alloc(c_sort_name,    name);
-            auto discipline = con_str_alloc(c_omega_group,  "[parentless]");
+            auto name =  d::strings::fallback(c_name, "[nameless]");
 
             auto idx = proc_set.add_family(out_set);
             out_set.buffers.canonical.family_names[idx].id             = name;
-            out_set.buffers.canonical.family_names[idx].display        = display;
-            out_set.buffers.canonical.family_names[idx].sort           = sort;
-            out_set.buffers.canonical.family_relations[idx].discipline = discipline;
+            out_set.buffers.canonical.family_names[idx].display        = d::strings::fallback(c_display_name, name);
+            out_set.buffers.canonical.family_names[idx].sort           = d::strings::fallback(c_sort_name,    name);
+            out_set.buffers.canonical.family_relations[idx].discipline = d::strings::fallback(c_omega_group,  "[no_discipline]");
         }
 
         // Groups -> Subjects
@@ -131,17 +130,37 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
             char const* c_display_name = xml_group->ToElement()->Attribute("displayName");
             char const* c_sort_name    = xml_group->ToElement()->Attribute("sortName");
             char const* c_mega_group   = xml_group->ToElement()->Attribute("megaGroup");
-            
-            auto name       = con_str_alloc(c_name,         "[nameless]");
-            auto display    = con_str_alloc(c_display_name, name);
-            auto sort       = con_str_alloc(c_sort_name,    name);
-            auto family     = con_str_alloc(c_mega_group,  "[parentless]");
+
+            auto name =  d::strings::fallback(c_name, "[nameless]");
 
             auto idx = proc_set.add_subject(out_set);
             out_set.buffers.canonical.subject_names[idx].id            = name;
-            out_set.buffers.canonical.subject_names[idx].display       = display;
-            out_set.buffers.canonical.subject_names[idx].sort          = sort;
-            out_set.buffers.canonical.subject_relations[idx].family    = family;
+            out_set.buffers.canonical.subject_names[idx].display       = d::strings::fallback(c_display_name, name);;
+            out_set.buffers.canonical.subject_names[idx].sort          = d::strings::fallback(c_sort_name,    name);
+            out_set.buffers.canonical.subject_relations[idx].family    = d::strings::fallback(c_mega_group,   "[no_family]");
+        }
+
+        // Terms -> Queries
+        for (auto *xml_term = xml_terms->FirstChild(); xml_term; xml_term = xml_term->NextSibling()) {
+            auto *base = find_child(xml_term, "base");
+            //auto *stat = find_child(xml_term, "stat");
+
+            char const* c_group    = base->ToElement()->Attribute("g");
+            char const* c_question = base->ToElement()->Attribute("q");
+            char const* c_answer   = base->ToElement()->Attribute("a");
+            char const* c_subgroup = base->ToElement()->Attribute("sg");
+            char const* c_subsort  = base->ToElement()->Attribute("ss");
+            
+            auto idx = proc_set.add_query(out_set);
+            out_set.buffers.canonical.query_payloads[idx].question = d::strings::fallback(c_question);
+            out_set.buffers.canonical.query_payloads[idx].answer   = d::strings::fallback(c_answer);
+            out_set.buffers.canonical.query_relations[idx].subject = d::strings::fallback(c_group);
+            out_set.buffers.canonical.query_relations[idx].group   = d::strings::fallback(c_subgroup);
+            
+            if (c_subsort != nullptr) {
+                std::array<std::string_view, 1> view = { std::string_view{c_subsort} };
+                out_set.buffers.canonical.query_sort[idx].sort_elements = proc_set.alloc(out_set, view);
+            }
         }
     }
 
