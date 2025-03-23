@@ -49,11 +49,10 @@ void metis::core::proc_set_dbg_string<style_t>::debug_string_query(std::stringst
 {
     douceurs::strings::render_dbg_vars<style_t>(ss,
       "payload",        [&view](auto &ss) { view.payload().debug_string<style_t>(ss);  },
-      "meta",           [&view](auto &ss) { view.meta().debug_string<style_t>(ss);     },
       "sort",           [&view](auto &ss) { view.sort().debug_string<style_t>(ss);     },
       "relations",      [&view](auto &ss) { view.relation().debug_string<style_t>(ss); },
       "batch",          [&view](auto &ss) { view.batch().debug_string<style_t>(ss);    },
-      "stats",          [&view](auto &ss) { view.stats().debug_string<style_t>(ss);    },
-      "meta",           [&view](auto &ss) { view.meta().debug_string<style_t>(ss);     }
+      "meta",           [&view](auto &ss) { view.meta().debug_string<style_t>(ss);     },
+      "stats",          [&view](auto &ss) { view.stats().debug_string<style_t>(ss);    }
     );
 }

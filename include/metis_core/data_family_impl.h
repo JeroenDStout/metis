@@ -1,3 +1,5 @@
+#pragma once
+
 #include "metis_core/data_family.h"
 
 #include "douceurs/render_string.h"
@@ -12,6 +14,14 @@ void metis::core::data_discipline_names::debug_string(std::stringstream& ss) con
       "id",         this->id,
       "display",    this->display,
       "sort",       this->sort
+    );
+}
+
+template<typename style_t>
+void metis::core::data_discipline_meta::debug_string(std::stringstream& ss) const
+{
+    ds::render_dbg_vars<style_t>(ss,
+      "tags",       this->tags
     );
 }
 
@@ -34,6 +44,14 @@ void metis::core::data_family_relation::debug_string(std::stringstream& ss) cons
 }
 
 template<typename style_t>
+void metis::core::data_family_meta::debug_string(std::stringstream& ss) const
+{
+    ds::render_dbg_vars<style_t>(ss,
+      "tags",       this->tags
+    );
+}
+
+template<typename style_t>
 void metis::core::data_subject_names::debug_string(std::stringstream& ss) const
 {
     ds::render_dbg_vars<style_t>(ss,
@@ -48,5 +66,13 @@ void metis::core::data_subject_relation::debug_string(std::stringstream& ss) con
 {
     ds::render_dbg_vars<style_t>(ss,
       "family",     this->family
+    );
+}
+
+template<typename style_t>
+void metis::core::data_subject_meta::debug_string(std::stringstream& ss) const
+{
+    ds::render_dbg_vars<style_t>(ss,
+      "tags",       this->tags
     );
 }

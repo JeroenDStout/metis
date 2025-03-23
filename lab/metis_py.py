@@ -24,9 +24,8 @@ print(view.get_dbg_string())
 # -
 
 data, stats = metis.load_legacy(file_load_path)
+
 print(stats.get_dbg_string())
 print(data.get_stats_string())
 
 print(data.get_query_view(1).get_dbg_string())
-
-

@@ -19,9 +19,6 @@ setup_project_source(metis_py "bindings"
     metis_set.cpp
     metis_query_view.cpp
     metis_family_view.cpp
-  include:
-    metis_query_view.h
-    metis_family_view.h
 )
 setup_project_source(metis_py "third_party"
   include:
