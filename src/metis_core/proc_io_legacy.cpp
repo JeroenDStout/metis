@@ -1,5 +1,7 @@
 #include "metis_core/proc_io_legacy.h"
 
+#include "metis_core/view_family.h"
+#include "metis_core/view_queries.h"
 #include "metis_core/proc_set.h"
 #include "metis_core/inc_tinyxml.h"
 
@@ -104,11 +106,11 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
             char const* c_sort_name    = xml_group->ToElement()->Attribute("sortName");
             
             auto name =  d::strings::fallback(c_name, "[nameless]");
-
-            auto idx = proc_set.add_discipline(out_set);
-            out_set.buffers.canonical.discipline_names[idx].id      = name;
-            out_set.buffers.canonical.discipline_names[idx].display = d::strings::fallback(c_display_name, name);
-            out_set.buffers.canonical.discipline_names[idx].sort    = d::strings::fallback(c_sort_name,    name);
+            
+            view_discipline view{ out_set, proc_set.add_discipline(out_set) };
+            view.names().id      = name;
+            view.names().display = d::strings::fallback(c_display_name, name);
+            view.names().sort    = d::strings::fallback(c_sort_name,    name);
         }
 
         // Megagroups -> Families
@@ -120,11 +122,11 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
             
             auto name =  d::strings::fallback(c_name, "[nameless]");
 
-            auto idx = proc_set.add_family(out_set);
-            out_set.buffers.canonical.family_names[idx].id             = name;
-            out_set.buffers.canonical.family_names[idx].display        = d::strings::fallback(c_display_name, name);
-            out_set.buffers.canonical.family_names[idx].sort           = d::strings::fallback(c_sort_name,    name);
-            out_set.buffers.canonical.family_relations[idx].discipline = d::strings::fallback(c_omega_group,  "[no_discipline]");
+            view_family view{ out_set, proc_set.add_family(out_set) };
+            view.names().id             = name;
+            view.names().display        = d::strings::fallback(c_display_name, name);
+            view.names().sort           = d::strings::fallback(c_sort_name,    name);
+            view.relations().discipline = d::strings::fallback(c_omega_group,  "[no_discipline]");
         }
 
         // Groups -> Subjects
@@ -135,12 +137,12 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
             char const* c_mega_group   = xml_group->ToElement()->Attribute("megaGroup");
 
             auto name =  d::strings::fallback(c_name, "[nameless]");
-
-            auto idx = proc_set.add_subject(out_set);
-            out_set.buffers.canonical.subject_names[idx].id            = name;
-            out_set.buffers.canonical.subject_names[idx].display       = d::strings::fallback(c_display_name, name);;
-            out_set.buffers.canonical.subject_names[idx].sort          = d::strings::fallback(c_sort_name,    name);
-            out_set.buffers.canonical.subject_relations[idx].family    = d::strings::fallback(c_mega_group,   "[no_family]");
+            
+            view_subject view{ out_set, proc_set.add_subject(out_set) };
+            view.names().id         = name;
+            view.names().display    = d::strings::fallback(c_display_name, name);;
+            view.names().sort       = d::strings::fallback(c_sort_name,    name);
+            view.relations().family = d::strings::fallback(c_mega_group, "[no_family]");
         }
 
         // Terms -> Queries
@@ -153,15 +155,15 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
             char const* c_subgroup = base->Attribute("sg");
             char const* c_subsort  = base->Attribute("ss");
             
-            auto idx = proc_set.add_query(out_set);
-            out_set.buffers.canonical.query_payloads[idx].question = d::strings::fallback(c_question);
-            out_set.buffers.canonical.query_payloads[idx].answer   = d::strings::fallback(c_answer);
-            out_set.buffers.canonical.query_relations[idx].subject = d::strings::fallback(c_group);
-            out_set.buffers.canonical.query_relations[idx].group   = d::strings::fallback(c_subgroup);
-            
+            view_query view{ out_set, proc_set.add_query(out_set) };
+            view.payload().question = d::strings::fallback(c_question);
+            view.payload().answer   = d::strings::fallback(c_answer);
+            view.relation().subject = d::strings::fallback(c_group);
+            view.relation().group   = d::strings::fallback(c_subgroup);
+
             if (c_subsort != nullptr) {
-                std::array<std::string_view, 1> view = { std::string_view{c_subsort} };
-                out_set.buffers.canonical.query_sort[idx].sort_elements = proc_set.alloc(out_set, view);
+                std::array<std::string_view, 1> span = { std::string_view{c_subsort} };
+                view.sort().sort_elements = proc_set.alloc(out_set, span);
             }
 
             auto *stat = find_child(xml_term, "stat")->ToElement();
@@ -174,19 +176,16 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
             char const* c_batch_penalty       = stat->Attribute("batchPenalty");
             char const* c_batch_penalty_heavy = stat->Attribute("batchPenaltyHeavy");
             char const* c_batch_rng           = stat->Attribute("rng");
-            
-            auto &query_batch = out_set.buffers.canonical.query_batch[idx];
-            auto &query_stats = out_set.buffers.canonical.query_stats[idx];
 
-            query_batch.query_last_tp       = ds::to_chrono<timepoint_d_t>(ds::fallback(c_query_last_asked), "%F %T", {});
-            query_batch.batch_base          = ds::convert_to<float>(ds::fallback(c_batch_base),          0.f);
-            query_batch.batch_penalty_slow  = ds::convert_to<float>(ds::fallback(c_batch_penalty),       0.f);
-            query_batch.batch_penalty_fast  = ds::convert_to<float>(ds::fallback(c_batch_penalty_heavy), 0.f);
-            query_batch.batch_rng           = ds::convert_to<float>(ds::fallback(c_batch_rng),           0.f);
+            view.batch().query_last_tp        = ds::to_chrono<timepoint_d_t>(ds::fallback(c_query_last_asked), "%F %T", {});
+            view.batch().batch_base           = ds::convert_to<float>(ds::fallback(c_batch_base),          0.f);
+            view.batch().batch_penalty_slow   = ds::convert_to<float>(ds::fallback(c_batch_penalty),       0.f);
+            view.batch().batch_penalty_fast   = ds::convert_to<float>(ds::fallback(c_batch_penalty_heavy), 0.f);
+            view.batch().batch_rng            = ds::convert_to<float>(ds::fallback(c_batch_rng),           0.f);
 
-            query_stats.query_add_time      = ds::to_chrono<timepoint_d_t>(ds::fallback(c_query_add_time),   "%F %T", {});
-            query_stats.count_query_all     = ds::convert_to<std::uint32_t>(ds::fallback(c_query_count_all),     (std::uint32_t)0);
-            query_stats.count_query_mistake = ds::convert_to<std::uint32_t>(ds::fallback(c_query_count_mistake), (std::uint32_t)0);
+            view.stats().query_add_time       = ds::to_chrono<timepoint_d_t>(ds::fallback(c_query_add_time), "%F %T", {});
+            view.stats().count_query_all      = ds::convert_to<std::uint32_t>(ds::fallback(c_query_count_all),     (std::uint32_t)0);
+            view.stats().count_query_mistake  = ds::convert_to<std::uint32_t>(ds::fallback(c_query_count_mistake), (std::uint32_t)0);
         }
     }
 

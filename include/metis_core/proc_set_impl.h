@@ -16,40 +16,44 @@ void metis::core::proc_set_dbg_string<style_t>::debug_string_stats(std::stringst
 }
 
 template<typename style_t>
-void metis::core::proc_set_dbg_string<style_t>::debug_string_discipline(std::stringstream &ss, data_set const &set, discipline_idx_t idx) const
+void metis::core::proc_set_dbg_string<style_t>::debug_string_discipline(std::stringstream &ss, view_discipline const &view) const
 {
     douceurs::strings::render_dbg_vars<style_t>(ss,
-      "names",          [&set, idx](auto &ss) { set.buffers.canonical.discipline_names[idx].debug_string<style_t>(ss); }
+      "names",          [&view](auto &ss) { view.names().debug_string<style_t>(ss); },
+      "meta",           [&view](auto &ss) { view.meta().debug_string<style_t>(ss);  }
     );
 }
 
 template<typename style_t>
-void metis::core::proc_set_dbg_string<style_t>::debug_string_family(std::stringstream &ss, data_set const &set, family_idx_t idx) const
+void metis::core::proc_set_dbg_string<style_t>::debug_string_family(std::stringstream &ss, view_family const &view) const
 {
     douceurs::strings::render_dbg_vars<style_t>(ss,
-      "names",          [&set, idx](auto &ss) { set.buffers.canonical.family_names[idx].debug_string<style_t>(ss); },
-      "relations",      [&set, idx](auto &ss) { set.buffers.canonical.family_relations[idx].debug_string<style_t>(ss); }
+      "names",          [&view](auto &ss) { view.names().debug_string<style_t>(ss);     },
+      "meta",           [&view](auto &ss) { view.meta().debug_string<style_t>(ss);      },
+      "relations",      [&view](auto &ss) { view.relations().debug_string<style_t>(ss); }
     );
 }
 
 template<typename style_t>
-void metis::core::proc_set_dbg_string<style_t>::debug_string_subject(std::stringstream &ss, data_set const &set, subject_idx_t idx) const
+void metis::core::proc_set_dbg_string<style_t>::debug_string_subject(std::stringstream &ss, view_subject const &view) const
 {
     douceurs::strings::render_dbg_vars<style_t>(ss,
-      "names",          [&set, idx](auto &ss) { set.buffers.canonical.subject_names[idx].debug_string<style_t>(ss); },
-      "relations",      [&set, idx](auto &ss) { set.buffers.canonical.subject_relations[idx].debug_string<style_t>(ss); }
+      "names",          [&view](auto &ss) { view.names().debug_string<style_t>(ss);     },
+      "meta",           [&view](auto &ss) { view.meta().debug_string<style_t>(ss);      },
+      "relations",      [&view](auto &ss) { view.relations().debug_string<style_t>(ss); }
     );
 }
 
 template<typename style_t>
-void metis::core::proc_set_dbg_string<style_t>::debug_string_query(std::stringstream &ss, data_set const &set, query_idx_t idx) const
+void metis::core::proc_set_dbg_string<style_t>::debug_string_query(std::stringstream &ss, view_query const &view) const
 {
     douceurs::strings::render_dbg_vars<style_t>(ss,
-      "payload",        [&set, idx](auto &ss) { set.buffers.canonical.query_payloads[idx].debug_string<style_t>(ss); },
-      "sort",           [&set, idx](auto &ss) { set.buffers.canonical.query_sort[idx].debug_string<style_t>(ss); },
-      "relations",      [&set, idx](auto &ss) { set.buffers.canonical.query_relations[idx].debug_string<style_t>(ss); },
-      "batch",          [&set, idx](auto &ss) { set.buffers.canonical.query_batch[idx].debug_string<style_t>(ss); },
-      "stats",          [&set, idx](auto &ss) { set.buffers.canonical.query_meta[idx].debug_string<style_t>(ss); },
-      "meta",           [&set, idx](auto &ss) { set.buffers.canonical.query_stats[idx].debug_string<style_t>(ss); }
+      "payload",        [&view](auto &ss) { view.payload().debug_string<style_t>(ss);  },
+      "meta",           [&view](auto &ss) { view.meta().debug_string<style_t>(ss);     },
+      "sort",           [&view](auto &ss) { view.sort().debug_string<style_t>(ss);     },
+      "relations",      [&view](auto &ss) { view.relation().debug_string<style_t>(ss); },
+      "batch",          [&view](auto &ss) { view.batch().debug_string<style_t>(ss);    },
+      "stats",          [&view](auto &ss) { view.stats().debug_string<style_t>(ss);    },
+      "meta",           [&view](auto &ss) { view.meta().debug_string<style_t>(ss);     }
     );
 }

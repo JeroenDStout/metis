@@ -4,10 +4,13 @@
  *  ...
  */
  
+ #include "metis_core/data_types.h"
+ #include "metis_core/view_family.h"
+ #include "metis_core/view_queries.h"
+
  #include <span>
  #include <string_view>
  #include <sstream>
- #include "metis_core/data_types.h"
 
 namespace metis::core {
 
@@ -31,11 +34,11 @@ namespace metis::core {
 
     template<typename style_t>
     struct proc_set_dbg_string {
-        void debug_string_stats(     std::stringstream&, data_set const&) const;
-        void debug_string_discipline(std::stringstream&, data_set const&, discipline_idx_t) const;
-        void debug_string_family(    std::stringstream&, data_set const&, family_idx_t) const;
-        void debug_string_subject(   std::stringstream&, data_set const&, subject_idx_t) const;
-        void debug_string_query(     std::stringstream&, data_set const&, query_idx_t) const;
+        void debug_string_stats(     std::stringstream&, data_set const&)        const;
+        void debug_string_discipline(std::stringstream&, view_discipline const&) const;
+        void debug_string_family(    std::stringstream&, view_family const&)     const;
+        void debug_string_subject(   std::stringstream&, view_subject const&)    const;
+        void debug_string_query(     std::stringstream&, view_query const&)      const;
     };
 
 }

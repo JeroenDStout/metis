@@ -37,6 +37,7 @@ auto proc_set::add_discipline(data_set &set) const -> discipline_idx_t
     set.buffers.meta.flag_maps_dirty = true;
 
     set.buffers.canonical.discipline_names.push_back({});
+    set.buffers.canonical.discipline_meta.push_back({});
     auto ret = query_idx_t(set.buffers.canonical.discipline_names.size() - 1);
 
     if (verbose_logging)
@@ -51,6 +52,7 @@ auto proc_set::add_family(data_set &set) const -> family_idx_t
 
     set.buffers.canonical.family_names.push_back({});
     set.buffers.canonical.family_relations.push_back({});
+    set.buffers.canonical.family_meta.push_back({});
     auto ret = query_idx_t(set.buffers.canonical.family_names.size() - 1);
 
     if (verbose_logging)
@@ -65,6 +67,7 @@ auto proc_set::add_subject(data_set &set) const -> subject_idx_t
 
     set.buffers.canonical.subject_names.push_back({});
     set.buffers.canonical.subject_relations.push_back({});
+    set.buffers.canonical.subject_meta.push_back({});
     auto ret = query_idx_t(set.buffers.canonical.subject_names.size() - 1);
 
     if (verbose_logging)

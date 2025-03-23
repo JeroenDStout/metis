@@ -23,6 +23,11 @@ setup_project_source(metis_core "core/data"
     data_family.h
     data_family_impl.h
 )
+setup_project_source(metis_core "core/view"
+  include:
+    view_queries.h
+    view_family.h
+)
 #setup_project_source(metis_core "core/policy"
 #)
 setup_project_source(metis_core "core/proc"

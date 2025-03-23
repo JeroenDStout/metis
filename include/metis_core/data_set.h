@@ -24,11 +24,14 @@ namespace metis::core {
 
         struct canonical_t {            
             array_t<data_discipline_names>   discipline_names;
+            array_t<data_discipline_meta>    discipline_meta;
                                              
             array_t<data_family_names>       family_names;
+            array_t<data_family_meta>        family_meta;
             array_t<data_family_relation>    family_relations;
                                              
             array_t<data_subject_names>      subject_names;
+            array_t<data_subject_meta>       subject_meta;
             array_t<data_subject_relation>   subject_relations;
 
             array_t<data_query_payload>      query_payloads;
