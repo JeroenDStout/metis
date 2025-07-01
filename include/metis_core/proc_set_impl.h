@@ -1,4 +1,5 @@
 #include "metis_core/data_set.h"
+#include "metis_core/data_family_impl.h"
 #include "metis_core/proc_set.h"
 
 #include "douceurs/render_string.h"

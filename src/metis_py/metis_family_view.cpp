@@ -1,4 +1,4 @@
-#include "metis_core/proc_set.h"
+#include "metis_core/proc_set_impl.h"
 
 #include "metis_py/metis_family_view.h"
 
@@ -58,12 +58,17 @@ namespace metis_query_view_detail {
 
 void nb_metis_discipline_view(nanobind::module_ &m)
 {
-    namespace d = metis_query_view_detail;
+    namespace mc = metis::core;
+    namespace d  = metis_query_view_detail;
 
     using view   = metis::py::discipline_view;
     using string = std::string;
+    using proc_set_dbg_string = mc::proc_set_dbg_string<douceurs::strings::render_dbg_vars_style_json>;
     
     nb::class_<view>(m, "discipline_view")
+      .def("get_dbg_string",
+        [](view const& view)            { proc_set_dbg_string p; std::stringstream ss; p.debug_string_discipline(ss, *view.owner, view.idx); return ss.str(); }
+      )
       .def_prop_rw("id",
         [](view const &view)            { return d::names(view).id;                            },
         [](view &view, string const &v) { d::names(view).id        = d::alloc_string(view, v); }
@@ -81,12 +86,17 @@ void nb_metis_discipline_view(nanobind::module_ &m)
 
 void nb_metis_family_view(nanobind::module_ &m)
 {
-    namespace d = metis_query_view_detail;
+    namespace mc = metis::core;
+    namespace d  = metis_query_view_detail;
 
     using view   = metis::py::family_view;
     using string = std::string;
+    using proc_set_dbg_string = mc::proc_set_dbg_string<douceurs::strings::render_dbg_vars_style_json>;
     
     nb::class_<view>(m, "family_view")
+      .def("get_dbg_string",
+        [](view const& view)            { proc_set_dbg_string p; std::stringstream ss; p.debug_string_family(ss, *view.owner, view.idx); return ss.str(); }
+      )
       .def_prop_rw("id",    
         [](view const &view)            { return d::names(view).id;                               },
         [](view &view, string const &v) { d::names(view).id            = d::alloc_string(view, v); }
@@ -108,12 +118,17 @@ void nb_metis_family_view(nanobind::module_ &m)
 
 void nb_metis_subject_view(nanobind::module_ &m)
 {
-    namespace d = metis_query_view_detail;
+    namespace mc = metis::core;
+    namespace d  = metis_query_view_detail;
 
     using view   = metis::py::subject_view;
     using string = std::string;
+    using proc_set_dbg_string = mc::proc_set_dbg_string<douceurs::strings::render_dbg_vars_style_json>;
     
     nb::class_<view>(m, "subject_view")
+      .def("get_dbg_string",
+        [](view const& view)            { proc_set_dbg_string p; std::stringstream ss; p.debug_string_subject(ss, *view.owner, view.idx); return ss.str(); }
+      )
       .def_prop_rw("id",
         [](view const &view)            { return d::names(view).id;                                },
         [](view &view, string const &v) { d::names(view).id            = d::alloc_string(view, v); }
