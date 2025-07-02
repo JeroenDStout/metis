@@ -33,3 +33,37 @@ void metis::core::data_query_relation::debug_string(std::stringstream &ss) const
       "group",   this->group
     );
 }
+
+template<typename style_t>
+void metis::core::data_query_batch::debug_string(std::stringstream &ss) const
+{
+    namespace ds = douceurs::strings;
+
+    ds::render_dbg_vars<style_t>(ss,
+      "base",         this->base,
+      "penalty_slow", this->penalty_slow,
+      "penalty_fast", this->penalty_fast,
+      "rng",          this->rng
+    );
+}
+
+template<typename style_t>
+void metis::core::data_query_meta::debug_string(std::stringstream &ss) const
+{
+    namespace ds = douceurs::strings;
+
+    ds::render_dbg_vars<style_t>(ss,
+      "flags",        this->flags
+    );
+}
+
+template<typename style_t>
+void metis::core::data_query_stats::debug_string(std::stringstream &ss) const
+{
+    namespace ds = douceurs::strings;
+
+    ds::render_dbg_vars<style_t>(ss,
+      "count_query",   this->count_query,
+      "count_mistake", this->count_mistake
+    );
+}

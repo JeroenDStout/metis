@@ -31,7 +31,7 @@ namespace metis::core {
     
     struct data_query_batch {
         float              base;
-        float              penalty, penalty_heavy;
+        float              penalty_slow, penalty_fast;
         float              rng;
         
         template<typename style_t>

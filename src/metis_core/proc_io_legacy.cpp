@@ -9,6 +9,7 @@
 #include "douceurs/template_buffer_alloc.h"
 #include "douceurs/render_string.h"
 #include "douceurs/string_view_manip.h"
+#include "douceurs/string_conv.h"
 
 #include <array>
 #include <chrono>
@@ -142,14 +143,13 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
 
         // Terms -> Queries
         for (auto *xml_term = xml_terms->FirstChild(); xml_term; xml_term = xml_term->NextSibling()) {
-            auto *base = find_child(xml_term, "base");
-            //auto *stat = find_child(xml_term, "stat");
+            auto *base = find_child(xml_term, "base")->ToElement();
 
-            char const* c_group    = base->ToElement()->Attribute("g");
-            char const* c_question = base->ToElement()->Attribute("q");
-            char const* c_answer   = base->ToElement()->Attribute("a");
-            char const* c_subgroup = base->ToElement()->Attribute("sg");
-            char const* c_subsort  = base->ToElement()->Attribute("ss");
+            char const* c_group    = base->Attribute("g");
+            char const* c_question = base->Attribute("q");
+            char const* c_answer   = base->Attribute("a");
+            char const* c_subgroup = base->Attribute("sg");
+            char const* c_subsort  = base->Attribute("ss");
             
             auto idx = proc_set.add_query(out_set);
             out_set.buffers.canonical.query_payloads[idx].question = d::strings::fallback(c_question);
@@ -161,6 +161,19 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
                 std::array<std::string_view, 1> view = { std::string_view{c_subsort} };
                 out_set.buffers.canonical.query_sort[idx].sort_elements = proc_set.alloc(out_set, view);
             }
+
+            auto *stat = find_child(xml_term, "stat")->ToElement();
+            
+            char const* c_batch_base          = stat->Attribute("batch");
+            char const* c_batch_penalty       = stat->Attribute("batchPenalty");
+            char const* c_batch_penalty_heavy = stat->Attribute("batchPenaltyHeavy");
+            char const* c_batch_rng           = stat->Attribute("rng");
+            
+            auto &query_batch = out_set.buffers.canonical.query_batch[idx];
+            query_batch.base          = d::strings::convert_to<float>(d::strings::fallback(c_batch_base),          0.f);
+            query_batch.penalty_slow  = d::strings::convert_to<float>(d::strings::fallback(c_batch_penalty),       0.f);
+            query_batch.penalty_fast  = d::strings::convert_to<float>(d::strings::fallback(c_batch_penalty_heavy), 0.f);
+            query_batch.rng           = d::strings::convert_to<float>(d::strings::fallback(c_batch_rng),           0.f);
         }
     }
 

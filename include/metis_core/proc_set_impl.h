@@ -47,6 +47,9 @@ void metis::core::proc_set_dbg_string<style_t>::debug_string_query(std::stringst
     douceurs::strings::render_dbg_vars<style_t>(ss,
       "payload",        [&set, idx](auto &ss) { set.buffers.canonical.query_payloads[idx].debug_string<style_t>(ss); },
       "sort",           [&set, idx](auto &ss) { set.buffers.canonical.query_sort[idx].debug_string<style_t>(ss); },
-      "relations",      [&set, idx](auto &ss) { set.buffers.canonical.query_relations[idx].debug_string<style_t>(ss); }
+      "relations",      [&set, idx](auto &ss) { set.buffers.canonical.query_relations[idx].debug_string<style_t>(ss); },
+      "batch",          [&set, idx](auto &ss) { set.buffers.canonical.query_batch[idx].debug_string<style_t>(ss); },
+      "stats",          [&set, idx](auto &ss) { set.buffers.canonical.query_meta[idx].debug_string<style_t>(ss); },
+      "meta",           [&set, idx](auto &ss) { set.buffers.canonical.query_stats[idx].debug_string<style_t>(ss); }
     );
 }

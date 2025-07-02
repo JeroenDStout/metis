@@ -24,22 +24,30 @@ namespace metis::core {
 
         struct canonical_t {            
             array_t<data_discipline_names>   discipline_names;
-            smap_t<discipline_idx_t>         discipline_id_to_idx;
                                              
             array_t<data_family_names>       family_names;
             array_t<data_family_relation>    family_relations;
-            smap_t<family_idx_t>             family_id_to_idx;
                                              
             array_t<data_subject_names>      subject_names;
             array_t<data_subject_relation>   subject_relations;
-            smap_t<subject_idx_t>            subject_id_to_idx;
 
             array_t<data_query_payload>      query_payloads;
             array_t<data_query_sort>         query_sort;
             array_t<data_query_relation>     query_relations;
-
-            bool                             flag_maps_dirty;
+            array_t<data_query_batch>        query_batch;
+            array_t<data_query_meta>         query_meta;
+            array_t<data_query_stats>        query_stats;
         } canonical;
+
+        struct derived_t {
+            smap_t<discipline_idx_t>         discipline_id_to_idx;
+            smap_t<family_idx_t>             family_id_to_idx;
+            smap_t<subject_idx_t>            subject_id_to_idx;
+        } derived;
+
+        struct meta_t {
+            bool                             flag_maps_dirty;
+        } meta;
     };
 
     struct data_set {

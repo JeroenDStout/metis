@@ -34,7 +34,7 @@ auto proc_set::alloc(data_set &set, string_view_span const &view_span) const -> 
 
 auto proc_set::add_discipline(data_set &set) const -> discipline_idx_t
 {
-    set.buffers.canonical.flag_maps_dirty = true;
+    set.buffers.meta.flag_maps_dirty = true;
 
     set.buffers.canonical.discipline_names.push_back({});
     auto ret = query_idx_t(set.buffers.canonical.discipline_names.size() - 1);
@@ -47,7 +47,7 @@ auto proc_set::add_discipline(data_set &set) const -> discipline_idx_t
 
 auto proc_set::add_family(data_set &set) const -> family_idx_t
 {
-    set.buffers.canonical.flag_maps_dirty = true;
+    set.buffers.meta.flag_maps_dirty = true;
 
     set.buffers.canonical.family_names.push_back({});
     set.buffers.canonical.family_relations.push_back({});
@@ -61,7 +61,7 @@ auto proc_set::add_family(data_set &set) const -> family_idx_t
 
 auto proc_set::add_subject(data_set &set) const -> subject_idx_t
 {
-    set.buffers.canonical.flag_maps_dirty = true;
+    set.buffers.meta.flag_maps_dirty = true;
 
     set.buffers.canonical.subject_names.push_back({});
     set.buffers.canonical.subject_relations.push_back({});
@@ -78,6 +78,10 @@ auto proc_set::add_query(data_set &set) const -> query_idx_t
     set.buffers.canonical.query_payloads.push_back({});
     set.buffers.canonical.query_relations.push_back({});
     set.buffers.canonical.query_sort.push_back({});
+    set.buffers.canonical.query_batch.push_back({});
+    set.buffers.canonical.query_stats.push_back({});
+    set.buffers.canonical.query_meta.push_back({});
+
     auto ret = query_idx_t(set.buffers.canonical.query_payloads.size() - 1);
 
     if (verbose_logging)
