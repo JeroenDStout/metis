@@ -40,10 +40,11 @@ void metis::core::data_query_batch::debug_string(std::stringstream &ss) const
     namespace ds = douceurs::strings;
 
     ds::render_dbg_vars<style_t>(ss,
-      "base",         this->base,
-      "penalty_slow", this->penalty_slow,
-      "penalty_fast", this->penalty_fast,
-      "rng",          this->rng
+      "query_last_tp",      this->query_last_tp,
+      "batch_base",         this->batch_base,
+      "batch_penalty_slow", this->batch_penalty_slow,
+      "batch_penalty_fast", this->batch_penalty_fast,
+      "batch_rng",          this->batch_rng
     );
 }
 
@@ -63,7 +64,8 @@ void metis::core::data_query_stats::debug_string(std::stringstream &ss) const
     namespace ds = douceurs::strings;
 
     ds::render_dbg_vars<style_t>(ss,
-      "count_query",   this->count_query,
-      "count_mistake", this->count_mistake
+      "query_add_time",      this->query_add_time,
+      "count_query_all",     this->count_query_all,
+      "count_query_mistake", this->count_query_mistake
     );
 }

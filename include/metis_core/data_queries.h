@@ -30,9 +30,10 @@ namespace metis::core {
     };
     
     struct data_query_batch {
-        float              base;
-        float              penalty_slow, penalty_fast;
-        float              rng;
+        timepoint_t        query_last_tp;
+        float              batch_base;
+        float              batch_penalty_slow, batch_penalty_fast;
+        float              batch_rng;
         
         template<typename style_t>
         void debug_string(std::stringstream&) const;
@@ -56,7 +57,8 @@ namespace metis::core {
     };
 
     struct data_query_stats {
-        std::uint32_t      count_query, count_mistake;
+        timepoint_t        query_add_time;
+        std::uint32_t      count_query_all, count_query_mistake;
         
         template<typename style_t>
         void debug_string(std::stringstream&) const;

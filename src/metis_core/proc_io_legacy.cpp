@@ -10,6 +10,7 @@
 #include "douceurs/render_string.h"
 #include "douceurs/string_view_manip.h"
 #include "douceurs/string_conv.h"
+#include "douceurs/string_conv_chrono.h"
 
 #include <array>
 #include <chrono>
@@ -19,7 +20,8 @@ using namespace metis::core;
 
 void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *out_stats, std::string_view path) const
 {
-    namespace d = douceurs;
+    namespace d  = douceurs;
+    namespace ds = douceurs::strings;
     
     if (verbose_logging)
       std::cout << "proc_io_legacy::load_from_path from " << path << " started" << std::endl;
@@ -164,16 +166,27 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
 
             auto *stat = find_child(xml_term, "stat")->ToElement();
             
+            char const* c_query_last_asked    = stat->Attribute("dateLastQuery");
+            char const* c_query_add_time      = stat->Attribute("dateAdded");
+            char const* c_query_count_all     = stat->Attribute("queryCount");
+            char const* c_query_count_mistake = stat->Attribute("mistakeCount");
             char const* c_batch_base          = stat->Attribute("batch");
             char const* c_batch_penalty       = stat->Attribute("batchPenalty");
             char const* c_batch_penalty_heavy = stat->Attribute("batchPenaltyHeavy");
             char const* c_batch_rng           = stat->Attribute("rng");
             
             auto &query_batch = out_set.buffers.canonical.query_batch[idx];
-            query_batch.base          = d::strings::convert_to<float>(d::strings::fallback(c_batch_base),          0.f);
-            query_batch.penalty_slow  = d::strings::convert_to<float>(d::strings::fallback(c_batch_penalty),       0.f);
-            query_batch.penalty_fast  = d::strings::convert_to<float>(d::strings::fallback(c_batch_penalty_heavy), 0.f);
-            query_batch.rng           = d::strings::convert_to<float>(d::strings::fallback(c_batch_rng),           0.f);
+            auto &query_stats = out_set.buffers.canonical.query_stats[idx];
+
+            query_batch.query_last_tp       = ds::to_chrono<timepoint_d_t>(ds::fallback(c_query_last_asked), "%F %T", {});
+            query_batch.batch_base          = ds::convert_to<float>(ds::fallback(c_batch_base),          0.f);
+            query_batch.batch_penalty_slow  = ds::convert_to<float>(ds::fallback(c_batch_penalty),       0.f);
+            query_batch.batch_penalty_fast  = ds::convert_to<float>(ds::fallback(c_batch_penalty_heavy), 0.f);
+            query_batch.batch_rng           = ds::convert_to<float>(ds::fallback(c_batch_rng),           0.f);
+
+            query_stats.query_add_time      = ds::to_chrono<timepoint_d_t>(ds::fallback(c_query_add_time),   "%F %T", {});
+            query_stats.count_query_all     = ds::convert_to<std::uint32_t>(ds::fallback(c_query_count_all),     (std::uint32_t)0);
+            query_stats.count_query_mistake = ds::convert_to<std::uint32_t>(ds::fallback(c_query_count_mistake), (std::uint32_t)0);
         }
     }
 
