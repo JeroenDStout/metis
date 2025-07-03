@@ -30,6 +30,8 @@ namespace metis::core {
     };
     
     struct data_query_batch {
+        bool               is_active : 1;
+        bool               is_potato : 1;
         timepoint_t        query_last_tp;
         float              batch_base;
         float              batch_penalty_slow, batch_penalty_fast;

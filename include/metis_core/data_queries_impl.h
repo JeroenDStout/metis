@@ -40,6 +40,12 @@ void metis::core::data_query_batch::debug_string(std::stringstream &ss) const
     namespace ds = douceurs::strings;
 
     ds::render_dbg_vars<style_t>(ss,
+      "properties",         [this](auto &ss) {
+        ds::render_dbg_vars_array<style_t>(ss, [this](auto callback) {
+          if (this->is_active) callback("active");
+          if (this->is_potato) callback("potato");
+        });
+      },
       "query_last_tp",      this->query_last_tp,
       "batch_base",         this->batch_base,
       "batch_penalty_slow", this->batch_penalty_slow,

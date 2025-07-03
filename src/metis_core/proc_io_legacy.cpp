@@ -168,6 +168,7 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
 
             auto *stat = find_child(xml_term, "stat")->ToElement();
             
+            char const* c_potato              = stat->Attribute("potato");
             char const* c_query_last_asked    = stat->Attribute("dateLastQuery");
             char const* c_query_add_time      = stat->Attribute("dateAdded");
             char const* c_query_count_all     = stat->Attribute("queryCount");
@@ -176,12 +177,14 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
             char const* c_batch_penalty       = stat->Attribute("batchPenalty");
             char const* c_batch_penalty_heavy = stat->Attribute("batchPenaltyHeavy");
             char const* c_batch_rng           = stat->Attribute("rng");
-
+            
+            view.batch().is_active            = true;
+            view.batch().is_potato            = ds::convert_to<std::uint32_t>(ds::fallback(c_potato),              (std::uint32_t)0) != 0;
             view.batch().query_last_tp        = ds::to_chrono<timepoint_d_t>(ds::fallback(c_query_last_asked), "%F %T", {});
-            view.batch().batch_base           = ds::convert_to<float>(ds::fallback(c_batch_base),          0.f);
-            view.batch().batch_penalty_slow   = ds::convert_to<float>(ds::fallback(c_batch_penalty),       0.f);
-            view.batch().batch_penalty_fast   = ds::convert_to<float>(ds::fallback(c_batch_penalty_heavy), 0.f);
-            view.batch().batch_rng            = ds::convert_to<float>(ds::fallback(c_batch_rng),           0.f);
+            view.batch().batch_base           = ds::convert_to<float>(ds::fallback(c_batch_base),                  0.f);
+            view.batch().batch_penalty_slow   = ds::convert_to<float>(ds::fallback(c_batch_penalty),               0.f);
+            view.batch().batch_penalty_fast   = ds::convert_to<float>(ds::fallback(c_batch_penalty_heavy),         0.f);
+            view.batch().batch_rng            = ds::convert_to<float>(ds::fallback(c_batch_rng),                   0.f);
 
             view.stats().query_add_time       = ds::to_chrono<timepoint_d_t>(ds::fallback(c_query_add_time), "%F %T", {});
             view.stats().count_query_all      = ds::convert_to<std::uint32_t>(ds::fallback(c_query_count_all),     (std::uint32_t)0);
