@@ -8,8 +8,8 @@ void metis::core::data_query_payload::debug_string(std::stringstream &ss) const
     namespace ds = douceurs::strings;
 
     ds::render_dbg_vars<style_t>(ss,
-      "question", this->question,
-      "answer",   this->answer
+      "question",           this->question,
+      "answer",             this->answer
     );
 }
 
@@ -19,7 +19,7 @@ void metis::core::data_query_sort::debug_string(std::stringstream &ss) const
     namespace ds = douceurs::strings;
 
     ds::render_dbg_vars<style_t>(ss,
-      "sort",    this->sort_elements
+      "sort",               this->sort_elements
     );
 }
 
@@ -29,8 +29,8 @@ void metis::core::data_query_relation::debug_string(std::stringstream &ss) const
     namespace ds = douceurs::strings;
 
     ds::render_dbg_vars<style_t>(ss,
-      "subject", this->subject,
-      "group",   this->group
+      "subject",            this->subject,
+      "group",              this->group
     );
 }
 
@@ -47,6 +47,7 @@ void metis::core::data_query_batch::debug_string(std::stringstream &ss) const
         });
       },
       "query_last_tp",      this->query_last_tp,
+      "timeout",            this->timeout,
       "batch_base",         this->batch_base,
       "batch_penalty_slow", this->batch_penalty_slow,
       "batch_penalty_fast", this->batch_penalty_fast,
@@ -60,7 +61,7 @@ void metis::core::data_query_meta::debug_string(std::stringstream &ss) const
     namespace ds = douceurs::strings;
 
     ds::render_dbg_vars<style_t>(ss,
-      "flags",        this->flags
+      "tags",               this->tags
     );
 }
 

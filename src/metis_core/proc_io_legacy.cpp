@@ -149,11 +149,12 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
         for (auto *xml_term = xml_terms->FirstChild(); xml_term; xml_term = xml_term->NextSibling()) {
             auto *base = find_child(xml_term, "base")->ToElement();
 
-            char const* c_group    = base->Attribute("g");
-            char const* c_question = base->Attribute("q");
-            char const* c_answer   = base->Attribute("a");
-            char const* c_subgroup = base->Attribute("sg");
-            char const* c_subsort  = base->Attribute("ss");
+            char const* c_group     = base->Attribute("g");
+            char const* c_question  = base->Attribute("q");
+            char const* c_answer    = base->Attribute("a");
+            char const* c_subgroup  = base->Attribute("sg");
+            char const* c_subsort   = base->Attribute("ss");
+            char const* c_sensitive = base->Attribute("sensitive");
             
             view_query view{ out_set, proc_set.add_query(out_set) };
             view.payload().question = d::strings::fallback(c_question);
@@ -164,6 +165,10 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
             if (c_subsort != nullptr) {
                 std::array<std::string_view, 1> span = { std::string_view{c_subsort} };
                 view.sort().sort_elements = proc_set.alloc(out_set, span);
+            }
+            if (c_sensitive != nullptr) {
+                std::array<std::string_view, 1> span = { std::string_view{"sensitive"} };
+                view.meta().tags          = proc_set.alloc(out_set, span);
             }
 
             auto *stat = find_child(xml_term, "stat")->ToElement();
@@ -181,6 +186,7 @@ void proc_io_legacy::load_from_path(metis::core::data_set &out_set, load_stats *
             view.batch().is_active            = true;
             view.batch().is_potato            = ds::convert_to<std::uint32_t>(ds::fallback(c_potato),              (std::uint32_t)0) != 0;
             view.batch().query_last_tp        = ds::to_chrono<timepoint_d_t>(ds::fallback(c_query_last_asked), "%F %T", {});
+            view.batch().timeout              = 0;
             view.batch().batch_base           = ds::convert_to<float>(ds::fallback(c_batch_base),                  0.f);
             view.batch().batch_penalty_slow   = ds::convert_to<float>(ds::fallback(c_batch_penalty),               0.f);
             view.batch().batch_penalty_fast   = ds::convert_to<float>(ds::fallback(c_batch_penalty_heavy),         0.f);
